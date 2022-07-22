@@ -7,6 +7,7 @@ function selectionOnClick(info, tab) {
     //await translate(sourceLang, targetLang, keyword);
     if (keyword != '') {
         if(includeJa(keyword)){//ja2en
+            keyword=encodeURIComponent(keyword)
         }
         else{//en2ja
             targetLang = "JA"
