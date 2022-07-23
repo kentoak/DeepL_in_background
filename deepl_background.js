@@ -25,9 +25,15 @@ function sendTextToDeepL(inString) {
 }
 
 async function deeplTranslate(targetLang,sourceLang,keyword){
-    var url = "https://api-free.deepl.com/v2/translate"+ '?' + "auth_key=" + token + "&text=" + keyword + "&target_lang=" + targetLang + "&source_lang=" + sourceLang;
-    var url1 = new URL(url)
-    const response = await fetch(url1.toString());
+    var url = new URL("https://api-free.deepl.com/v2/translate"+ '?' + "auth_key=" + token + "&text=" + keyword + "&target_lang=" + targetLang + "&source_lang=" + sourceLang);
+    var url_ = "https://api-free.deepl.com/v2/translate"
+    var options = {
+        method: "POST",
+        headers:{"Content-Type": "application/x-www-form-urlencoded"},
+        body: "auth_key=" + token + "&text=" + keyword + "&target_lang=" + targetLang + "&source_lang=" + sourceLang
+    }
+    //const response = await fetch(url.toString());
+    const response = await fetch(url_,options);
     const data = response.ok ? await response.json() : null;
     const source = keyword;
     const target = data?.translations?.[0]?.text;
