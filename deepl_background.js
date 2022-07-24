@@ -20,7 +20,7 @@ function selectionOnClick(info, tab) {
 function sendTextToDeepL(inString) {
     //var input = encodeURIComponent(inString);
     var input = inString;
-    setText = input.replace(/([^\w.]) +([^\w.])/g, '$1$2').replace(/([\w.]) +([^\w.])/g, '$1$2').replace(/([^\w.]) +([\w.])/g, '$1$2').replace(/([^\w.]),+([^\w.])/g, '$1、$2').replace(/([^\w.])，+([^\w.])/g, '$1、$2').replace(/([^\w.])\.+/g, '$1。').replace(/([^\w.])\．+/g, '$1。').replace(/([\w.])、+([\w.])/g, '$1,$2').replace(/([\w.])。+/g, '$1.').replace(/([\w.]):+([\w.])/g, '$1: $2');//半角スペースの繰り返しを消す //([^\w.])は全角 //+は直前の1回以上の繰り返し //カッコ()が＄の番号//半角+半角スペース+全角の半角スペースと、全角+半角スペース+半角の半角スペースも消す。//全角ピリオド、全角カンマにも対応//半角:半角のときには半角スペースを入れる。//半角スペースの繰り返しを消す //([^\w.])は全角 //+は直前の1回以上の繰り返し //カッコ()が＄の番号( )、カッコ内をグループ化。マッチした内容は参照可//gオプションは置き換えたい文字列を指定した時にその文字が複数含まれている場合に、その全てを置き換えるオプション
+    setText = input.replace('，', '、').replace('．', '。').replace(/([^\x01-\x7E\uFF61-\uFF9F]) +([^\x01-\x7E\uFF61-\uFF9F])/g, '$1$2').replace(/([^\x01-\x7E\uFF61-\uFF9F]) +([A-Za-z0-9])/g, '$1$2').replace(/([A-Za-z0-9]) +([^\x01-\x7E\uFF61-\uFF9F])/g, '$1$2').replace(/([^\x01-\x7E\uFF61-\uFF9F]),/g,'$1、').replace(/(^[^\x01-\x7E]*$)\．+/g, '$1。').replace(/(^[^\x01-\x7E])、+([^\x01-\x7E])/g, '$1, $2').replace(/([^\x01-\x7E\uFF61-\uFF9F])\./, '$1。').replace(/(^[^\x01-\x7E]*$)。+/g, '$1.').replace(/([^\x01-\x7E]):+([^\x01-\x7E])/g, '$1: $2');
     return setText
 }
 
@@ -36,10 +36,13 @@ async function deeplTranslate(targetLang,sourceLang,keyword){
     const response = await fetch(url_,options);
     const data = response.ok ? await response.json() : null;
     const source = keyword;
-    const target = data?.translations?.[0]?.text;
-    //window.alert(target)
-    saveToClipboard(target)
-    var result = target ? { source, target } : null
+    var target = data?.translations?.[0]?.text;
+    for(var i=0; i<10; i++){
+        target = target.replace('，', '、').replace('．', '。').replace(/([^\x01-\x7E\uFF61-\uFF9F]) +([^\x01-\x7E\uFF61-\uFF9F])/g, '$1$2').replace(/([^\x01-\x7E\uFF61-\uFF9F]) +([A-Za-z0-9])/g, '$1$2').replace(/([A-Za-z0-9]) +([^\x01-\x7E\uFF61-\uFF9F])/g, '$1$2').replace(/([^\x01-\x7E\uFF61-\uFF9F]),/g,'$1、').replace(/(^[^\x01-\x7E]*$)\．+/g, '$1。').replace(/(^[^\x01-\x7E])、+([^\x01-\x7E])/g, '$1, $2').replace(/([^\x01-\x7E\uFF61-\uFF9F])\./, '$1。').replace(/(^[^\x01-\x7E]*$)。+/g, '$1.').replace(/([^\x01-\x7E]):+([^\x01-\x7E])/g, '$1: $2');
+    }
+    var target1 = target
+    saveToClipboard(target1)
+    var result = target1 ? { source, target1 } : null
     return result;
 };
 
